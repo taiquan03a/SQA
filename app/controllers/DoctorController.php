@@ -14,7 +14,7 @@
             // {
             //     $this->resp->result = 0;
             //     $this->resp->msg = "You are not admin & you can't do this action !";
-            //     $this->jsonecho();
+            //     return $this->jsonecho();
             // }
 
             $request_method = Input::method();
@@ -42,7 +42,7 @@
          * @since 12-10-2022
          * get doctor by id
          */
-        private function getById()
+        public function getById()
         {
             /**Step 1 */
             $this->resp->result = 0;
@@ -53,7 +53,7 @@
             // if( $AuthUser->get("role") != "admin" )
             // {
             //     $this->resp->msg = "You are not admin & you can't do this action !";
-            //     $this->jsonecho();
+            //     return $this->jsonecho();
             // }
 
 
@@ -62,7 +62,7 @@
             if( !isset($Route->params->id) )
             {
                 $this->resp->msg = "ID is required !";
-                $this->jsonecho();
+                return $this->jsonecho();
             }
 
 
@@ -73,7 +73,7 @@
                 if( !$Doctor->isAvailable() )
                 {
                     $this->resp->msg = "Doctor is not available";
-                    $this->jsonecho();
+                    return $this->jsonecho();
                 }
 
                 $query = DB::table(TABLE_PREFIX.TABLE_DOCTORS)
@@ -96,7 +96,7 @@
                 if( count($result) > 1 )
                 {
                     $this->resp->msg = "Oops, there is an error occurring. Try again !";
-                    $this->jsonecho();
+                    return $this->jsonecho();
                 }
 
                 
@@ -132,7 +132,7 @@
             {
                 $this->resp->msg = $ex->getMessage();
             }
-            $this->jsonecho();
+            return $this->jsonecho();
         }
 
 
@@ -141,7 +141,7 @@
          * @since 13-10-2022
          * update a doctor's information except avatar, password & email
          */
-        private function update()
+        public function update()
         {
             /**Step 0 - declare */
             $this->resp->result = 0;
@@ -151,13 +151,13 @@
             if( $AuthUser->get("role") != "admin" )
             {
                 $this->resp->msg = "You are not admin & you can't do this action !";
-                $this->jsonecho();
+                return $this->jsonecho();
             }
 
             if( !isset($Route->params->id) )
             {
                 $this->resp->msg = "ID is required !";
-                $this->jsonecho();
+                return $this->jsonecho();
             }
 
             /**Step 1 - does the doctor exist ? */
@@ -165,7 +165,7 @@
             if( !$Doctor->isAvailable() )
             {
                 $this->resp->msg = "Doctor is not available. Try again !";
-                $this->jsonecho();
+                return $this->jsonecho();
             }
 
             $required_fields = ["phone", "name", "role"];
@@ -174,7 +174,7 @@
                 if( !Input::put($field) )
                 {
                     $this->resp->msg = "Missing field: ".$field;
-                    $this->jsonecho();
+                    return $this->jsonecho();
                 }
             }
 
@@ -208,19 +208,19 @@
             $name_validation = isVietnameseName($name);
             if( $name_validation == 0 ){
                 $this->resp->msg = "Vietnamese name only has letters and space";
-                $this->jsonecho();
+                return $this->jsonecho();
             }
 
             /**Step 3.2 - phone validation */
             if( strlen($phone) < 10 ){
                 $this->resp->msg = "Phone number has at least 10 number !";
-                $this->jsonecho();
+                return $this->jsonecho();
             }
     
             $phone_number_validation = isNumber($phone);
             if( !$phone_number_validation ){
                 $this->resp->msg = "This is not a valid phone number. Please, try again !";
-                $this->jsonecho();
+                return $this->jsonecho();
             }
 
             /**Step 3.3 -  price validation */
@@ -228,12 +228,12 @@
             if( !$price_validation )
             {
                 $this->resp->msg = "This is not a valid price. Please, try again !";
-                $this->jsonecho();
+                return $this->jsonecho();
             }
             if( $price < 100000 )
             {
                 $this->resp->msg = "Price must greater than 100.000 !";
-                $this->jsonecho();
+                return $this->jsonecho();
             }
 
             /**Step 3.4 - role validation */
@@ -242,7 +242,7 @@
             if( !$role_validation )
             {
                 $this->resp->msg = "Role is not valid. There are 2 valid values: ".implode(', ',$valid_roles)." !";
-                $this->jsonecho();
+                return $this->jsonecho();
             }
 
             /**Step 3.5 - speciality validation */
@@ -250,7 +250,7 @@
             if( !$Speciality->isAvailable() )
             {
                 $this->resp->msg = "Speciality is not available.";
-                $this->jsonecho();
+                return $this->jsonecho();
             }
 
             /**Step 3.6 - clinic validation */
@@ -258,7 +258,7 @@
             // if( !$Clinic->isAvailable() )
             // {
             //     $this->resp->msg = "Clinic is not available.";
-            //     $this->jsonecho();
+            //     return $this->jsonecho();
             // }
 
             /**Step - 3.7 - room validation */
@@ -266,7 +266,7 @@
             if( !$Room->isAvailable() )
             {
                 $this->resp->msg = "Room is not available.";
-                $this->jsonecho();
+                return $this->jsonecho();
             }
 
             /**Step 4 - save*/
@@ -305,7 +305,7 @@
             {
                 $this->resp->msg = $ex->getMessage();
             }
-            $this->jsonecho();
+            return $this->jsonecho();
         }
 
 
@@ -314,7 +314,7 @@
          * @since 09-11-2022
          * update avatar for doctor
          */
-        private function updateAvatar()
+        public function updateAvatar()
         {
             /**Step 0 - declare */
             $this->resp->result = 0;
@@ -324,13 +324,13 @@
             if( $AuthUser->get("role") != "admin" )
             {
                 $this->resp->msg = "You are not admin & you can't do this action !";
-                $this->jsonecho();
+                return $this->jsonecho();
             }
 
             if( !isset($Route->params->id) )
             {
                 $this->resp->msg = "ID is required !";
-                $this->jsonecho();
+                return $this->jsonecho();
             }
 
             /**Step 1 - does the doctor exist ? */
@@ -338,12 +338,12 @@
             if( !$Doctor->isAvailable())
             {
                 $this->resp->msg = "Doctor is not available. Try again !";
-                $this->jsonecho();
+                return $this->jsonecho();
             }
             if( $Doctor->get("active") != 1)
             {
                 $this->resp->msg = "Doctor have been deactivated so that you can not do this action";
-                $this->jsonecho();
+                return $this->jsonecho();
             }
 
             date_default_timezone_set('Asia/Ho_Chi_Minh');
@@ -353,7 +353,7 @@
             if (empty($_FILES["file"]) || $_FILES["file"]["size"] <= 0) 
             {
                 $this->resp->msg = "Photo is not received !";
-                $this->jsonecho();
+                return $this->jsonecho();
             }
 
             
@@ -363,7 +363,7 @@
             if (!in_array($ext, $allow)) 
             {
                 $this->resp->msg = __("Only ".join(",", $allow)." files are allowed");
-                $this->jsonecho();
+                return $this->jsonecho();
             }
 
 
@@ -383,7 +383,7 @@
             if (!move_uploaded_file($_FILES["file"]["tmp_name"], $filepath)) 
             {
                 $this->resp->msg = __("Oops! An error occured. Please try again later!");
-                $this->jsonecho();
+                return $this->jsonecho();
             }
             
             /**Step 6 - update photo name for Doctor */
@@ -403,7 +403,7 @@
                 $this->resp->msg = $ex->getMessage();
             }
 
-            $this->jsonecho();
+            return $this->jsonecho();
         }
 
 
@@ -420,7 +420,7 @@
          * Neu mà hủy kích hoạt bác sĩ đang có bệnh nhân đặt khám hoặc lịch hẹn thì cần phải 
          * chuyển trạng thái các cuộc hẹn trên về dạng HỦY BỎ
          */
-        private function delete()
+        public function delete()
         {
             /**Step 1 - declare */
             $this->resp->result = 0;
@@ -432,21 +432,21 @@
             if( $AuthUser->get("role") != "admin" )
             {
                 $this->resp->msg = "You are not admin & you can't do this action !";
-                $this->jsonecho();
+                return $this->jsonecho();
             }
 
             /**Step 2 - check required data */
             if( !isset($Route->params->id) )
             {
                 $this->resp->msg = "ID is required !";
-                $this->jsonecho();
+                return $this->jsonecho();
             }
 
             /**Step 3 (Case 0) - can not delete yourself the current account which is logging */
             if( $AuthUser->get("id") == $Route->params->id )
             {
                 $this->resp->msg = "You can not deactivate yourself !";
-                $this->jsonecho();
+                return $this->jsonecho();
             }
 
 
@@ -456,12 +456,12 @@
             if( !$Doctor->isAvailable() )
             {
                 $this->resp->msg = "Doctor is not available !";
-                $this->jsonecho();
+                return $this->jsonecho();
             }
             if( $Doctor->get("active") != 1)
             {
                 $this->resp->msg = "This doctor account was deactivated. No need this action !";
-                $this->jsonecho();
+                return $this->jsonecho();
             }
 
             /**Step 5 ( Case 2a ): can not delete a doctor having booking or appointments */
@@ -510,7 +510,7 @@
             {
                 $this->resp->msg = $ex->getMessage();
             }
-            $this->jsonecho();
+            return $this->jsonecho();
         }
     }
 ?>

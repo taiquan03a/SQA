@@ -56,7 +56,7 @@
          * 1. Find appointment record with its ID
          * 2. Find appointment record with its appointment_id
          */
-        private function getById()
+        public function getById()
         {
             /**Step 1 */
             $this->resp->result = 0;
@@ -189,7 +189,7 @@
          * @since 23-10-2022
          * update an appointment record info
          */
-        private function update()
+        public function update()
         {
             /**Step 1 - declare */
             $this->resp->result = 0;
