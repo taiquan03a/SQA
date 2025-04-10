@@ -328,7 +328,7 @@ class BookingsControllerTest extends TestCase
         $this->controller->getAll();
         $output = ob_get_clean();
         $result = json_decode($output);
-        echo "\n\n======== DECODED JSON OUTPUT TEST 13 ========\n";
+        echo "\n\n======== DECODED JSON OUTPUT TEST 14 ========\n";
         print_r($result);
         $this->assertEquals(1, $result->result); // Falls back to default desc
     }
@@ -341,7 +341,7 @@ class BookingsControllerTest extends TestCase
         $this->controller->getAll();
         $output = ob_get_clean();
         $result = json_decode($output);
-        echo "\n\n======== DECODED JSON OUTPUT TEST 13 ========\n";
+        echo "\n\n======== DECODED JSON OUTPUT TEST 15 ========\n";
         print_r($result);
         $this->assertEquals(1, $result->result);
         $this->assertNotEmpty($result->data);
